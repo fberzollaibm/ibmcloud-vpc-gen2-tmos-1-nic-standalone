@@ -26,7 +26,7 @@ data "template_file" "user_data" {
 // TMM is the firewall
 resource "ibm_is_security_group" "f5_tmm_sg" {
   name = "f5-tmm-sg"
-  vpc  = data.ibm_is_subnet.f5_management.vpc
+  vpc  = data.ibm_is_subnet.f5_subnet.vpc
 }
 
 // all TCP
@@ -93,8 +93,8 @@ resource "ibm_is_instance" "f5_ve_instance" {
     subnet          = data.ibm_is_subnet.f5_subnet.id
     security_groups = [ibm_is_security_group.f5_tmm_sg.id]
   }
-  vpc  = data.ibm_is_subnet.f5_management.vpc
-  zone = data.ibm_is_subnet.f5_management.zone
+  vpc  = data.ibm_is_subnet.f5_subnet.vpc
+  zone = data.ibm_is_subnet.f5_subnet.zone
   keys = [data.ibm_is_ssh_key.f5_ssh_pub_key.id]
   user_data = data.template_file.user_data.rendered
 }
@@ -113,15 +113,15 @@ output "resource_status" {
   value = ibm_is_instance.f5_ve_instance.status
 }
 
-output = "VPC" {
+output "VPC" {
   value = ibm_is_instance.f5_ve_instance.vpc
 }
 
-output = "f5_admin_portal" {
-  value = "https://${ibm_is_floating_ip.f5_management_ip.address}:8443"
+output "f5_admin_portal" {
+  value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443"
 }
 
-output = "f5_as_url" {
-  value = "https://${ibm_is_floating_ip.f5_management_ip.address}:8443/mgmt/shared/appsvcs/declare"
+output "f5_as_url" {
+  value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443/mgmt/shared/appsvcs/declare"
 }
 
