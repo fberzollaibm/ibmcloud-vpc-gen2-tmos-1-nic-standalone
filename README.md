@@ -83,6 +83,7 @@ After you apply the template your VPC resources are successfully provisioned in 
 | `resource_name` | Name of the F5 BIG-IP instance | N/A |
 | `resource_status` | Status of the F5 BIG-IP instance | `Running` or `Failed` |
 | `VPC` | The VPC ID | `r134-7a9df886-xxxx-yyyy-zzzz-67c6dd202337` |
+| `f5_shell_access` | SSH access to F5-BIGIP - `ssh://root@<Floating IP>` | `ssh://root@192.168.1.1` |
 | `f5_admin_portal` | Web url to interact with F5-BIGIP admin portal - `https://<Floating IP>:8443` | `https://192.168.1.1:8443` |
 | `f5_as3_url` | F5-BIGIP application services declarative interface - `https://<Floating IP>:8443/mgmt/shared/appsvcs/declare` | `https://192.168.1.1:8443/mgmt/shared/appsvcs/declare` |
 

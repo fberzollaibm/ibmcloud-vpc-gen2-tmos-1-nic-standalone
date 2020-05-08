@@ -117,6 +117,10 @@ output "VPC" {
   value = ibm_is_instance.f5_ve_instance.vpc
 }
 
+output "f5_shell_access" {
+  value = "ssh://root@${ibm_is_floating_ip.f5_floating_ip.address}"
+}
+
 output "f5_admin_portal" {
   value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443"
 }
