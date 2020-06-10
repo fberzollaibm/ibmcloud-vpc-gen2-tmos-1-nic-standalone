@@ -26,7 +26,7 @@ data "ibm_is_image" "f5_custom_image" {
 
 # Delete custom image from the local user after VSI creation.
 data "external" "delete_custom_image" {
-  depends_on = ["ibm_is_instance.f5_vsi"]
+  depends_on = ["ibm_is_instance.f5_ve_instance"]
   program    = ["bash", "${path.module}/scripts/delete_custom_image.sh"]
 
   query = {
