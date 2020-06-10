@@ -8,7 +8,7 @@ data "ibm_is_subnet" "f5_subnet" {
 
 data "ibm_resource_group" "rg" {
   depends_on = ["data.ibm_is_subnet.f5_subnet"]
-  name       = "${data.ibm_is_subnet.f5_subnet1.resource_group_name}"
+  name       = "${data.ibm_is_subnet.f5_subnet.resource_group_name}"
 }
 
 data "ibm_is_ssh_key" "f5_ssh_pub_key" {
