@@ -3,10 +3,10 @@ variable "instance_name" {
   description = ""
 }
 
-variable "tmos_image_name" {
-  default     = "my-bigip-image"
-  description = "The image to be used when provisioning the F5 BIG-IP instance. To list available images, run `ibmcloud is images`."
-}
+#variable "tmos_image_name" {
+#  default     = "my-bigip-image"
+#  description = "The image to be used when provisioning the F5 BIG-IP instance. To list available images, run `ibmcloud is images`."
+#}
 
 variable "instance_profile" {
   default     = "cx2-2x4"
