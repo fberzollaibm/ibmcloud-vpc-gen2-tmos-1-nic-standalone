@@ -42,3 +42,8 @@ variable "vnf_cos_image_name" {
   default     = ""
   description = "The name of the qcow2 Image name"
 }
+
+variable "vnf_bucket_base_name" {
+  default     = ""
+  description = "The base name of the bucket which holds the qcow2 Image, For Ex. If bucket name is bigip-13.1.3-0.0.6.all-1slot-eu-de bigip-13.1.3-0.0.6.all-1slot should be the input here, hyphen(-) and region name will be added by the script before copy"
+}
