@@ -1,6 +1,6 @@
-data "ibm_is_image" "tmos_image" {
-    name = var.tmos_image_name
-}
+# data "ibm_is_image" "tmos_image" {
+#    name = var.tmos_image_name
+# }
 
 data "ibm_is_subnet" "f5_subnet" {
   identifier = var.subnet_id

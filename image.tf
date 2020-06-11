@@ -1,3 +1,7 @@
+data "ibm_resource_group" "rg" {
+  depends_on = ["data.ibm_is_subnet.f5_subnet"]
+  name = "${data.ibm_is_subnet.f5_subnet.resource_group_name}"
+}
 
 locals {
   image_url = "cos://${var.region}/${var.vnf_bucket_base_name}-${var.region}/${var.vnf_cos_image_name}"
