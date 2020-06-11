@@ -97,11 +97,11 @@ resource "ibm_is_instance" "f5_ve_instance" {
   primary_network_interface {
     name            = "tmm-1nic"
     subnet          = "${data.ibm_is_subnet.f5_subnet.id}"
-    security_groups = ["ibm_is_security_group.f5_tmm_sg.id"]
+    security_groups = "${ibm_is_security_group.f5_tmm_sg.id}"
   }
   vpc       = "${data.ibm_is_subnet.f5_subnet.vpc}"
   zone      = "${data.ibm_is_subnet.f5_subnet.zone}"
-  keys      = ["data.ibm_is_ssh_key.f5_ssh_pub_key.id"]
+  keys      = "${data.ibm_is_ssh_key.f5_ssh_pub_key.id}"
   user_data = "${data.template_file.user_data.rendered}"
 }
 
