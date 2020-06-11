@@ -19,6 +19,7 @@ data "template_file" "user_data" {
   vars = {
     tmos_admin_password = var.tmos_admin_password
     tmos_license_basekey = var.tmos_license_basekey
+    phone_home_url = var.phone_home_url
   }
 }
 
