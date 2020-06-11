@@ -1,6 +1,6 @@
-data "ibm_is_image" "tmos_image" {
-    name = var.tmos_image_name
-}
+# data "ibm_is_image" "tmos_image" {
+#    name = var.tmos_image_name
+# }
 
 data "ibm_is_subnet" "f5_subnet" {
   identifier = var.subnet_id
@@ -19,6 +19,7 @@ data "template_file" "user_data" {
   vars = {
     tmos_admin_password = var.tmos_admin_password
     tmos_license_basekey = var.tmos_license_basekey
+    phone_home_url = var.phone_home_url
   }
 }
 
@@ -86,7 +87,8 @@ resource "ibm_is_security_group_rule" "f5_tmm_out_icmp" {
 
 resource "ibm_is_instance" "f5_ve_instance" {
   name    = var.instance_name
-  image   = data.ibm_is_image.tmos_image.id
+  # image   = data.ibm_is_image.tmos_image.id
+  image          = data.ibm_is_image.f5_custom_image.id
   profile = data.ibm_is_instance_profile.instance_profile.id
   primary_network_interface {
     name            = "tmm-1nic"

@@ -1,9 +1,9 @@
-variable "api_key" {
-  default=""
-}
+#variable "api_key" {
+#  default = ""
+#}
 
 variable "region" {
-  default=""
+  default = ""
   description = "The region where the F5 BIG-IP instance is to be provisioned. To list available regions, run `ibmcloud is regions`. Supported regions are eu-de, eu-gb, us-south, us-east "
 }
 
@@ -13,7 +13,7 @@ variable "generation" {
 }
 
 provider "ibm" {
-  ibmcloud_api_key      = var.api_key
+  # ibmcloud_api_key      = var.api_key
   generation            = var.generation 
   region                = var.region
   ibmcloud_timeout      = 300
