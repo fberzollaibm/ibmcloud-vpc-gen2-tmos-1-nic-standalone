@@ -86,7 +86,8 @@ resource "ibm_is_security_group_rule" "f5_tmm_out_icmp" {
 
 resource "ibm_is_instance" "f5_ve_instance" {
   name    = var.instance_name
-  image   = data.ibm_is_image.tmos_image.id
+  # image   = data.ibm_is_image.tmos_image.id
+  image          = data.ibm_is_image.f5_custom_image.id
   profile = data.ibm_is_instance_profile.instance_profile.id
   primary_network_interface {
     name            = "tmm-1nic"
