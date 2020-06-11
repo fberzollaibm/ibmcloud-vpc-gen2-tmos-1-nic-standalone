@@ -72,17 +72,13 @@ resource "ibm_is_security_group_rule" "f5_tmm_out_udp" {
 resource "ibm_is_security_group_rule" "f5_tmm_in_icmp" {
   group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "inbound"
-  icmp {
-    type = 8
-  }
+  icmp {}
 }
 
 resource "ibm_is_security_group_rule" "f5_tmm_out_icmp" {
   group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "outbound"
-  icmp {
-    type = 0
-  }
+  icmp {}
 }
 
 resource "ibm_is_instance" "f5_ve_instance" {
