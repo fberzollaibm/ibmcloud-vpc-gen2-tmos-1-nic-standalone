@@ -51,3 +51,8 @@ variable "vnf_vpc_image_name" {
   default     = "f5-bigip-15-0-1-0-0-11"
   description = "The name of the F5-BIGIP custom image to be provisioned in your IBM Cloud account."
 }
+
+variable "TF_VERSION" {
+  default = "0.12"
+  description = "terraform engine version to be used in schematics"
+}
