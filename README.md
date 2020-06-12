@@ -24,7 +24,6 @@ Learn more; https://www.ibm.com/cloud/support
 
 - Must have access to [Gen 2 VPC](https://cloud.ibm.com/vpc-ext/network/vpcs).
 - The given VPC must have at least 1 subnet to deploy the BIG-IP.  The lone subnet is for management and data traffic.  BIG-IP self-IPs will automatically be assigned to the subnet during initial boot.
-- The BIG-IP custom image you wish to deploy is present in your list of images. run 'ibmcloud is images' to ensure the image you wish to deploy is available. 
 
 ## Costs
 
@@ -32,7 +31,6 @@ When you apply the template, the infrastructure resources that you create incur 
 
 
 * _VPC_: VPC charges are incurred for the infrastructure resources within the VPC, as well as network traffic for internet data transfer. For more information, see [Pricing for VPC](https://cloud.ibm.com/docs/vpc-on-classic?topic=vpc-on-classic-pricing-for-vpc).
-* _VPC Custom Image_: VPC charges per custom image.
 * _F5 BIG-IP Instances_: The price for your virtual server instances depends on the flavor of the instance, how many you provision, and how long the instances are run. For more information, see [Pricing for Virtual Servers for VPC](https://cloud.ibm.com/docs/infrastructure/vpc-on-classic?topic=vpc-on-classic-pricing-for-vpc#pricing-for-virtual-servers-for-vpc).
 
 ## Dependencies
@@ -46,7 +44,6 @@ Before you can apply the template in IBM Cloud, complete the following steps.
 2.  Ensure the following resources exist in your VPC Gen 2 environment
     - a VPC with 1 subnet
     - an SSH key, to ssh into your BIG-IP instance after deployment.
-    - The custom image you wish to deploy is present in your account.
 
 ## Configuring your deployment values
 
@@ -60,8 +57,8 @@ Fill in the following values, based on the steps that you completed before you b
 | `region` | null | The VPC Zone that you want your VPC virtual servers to be provisioned. To list available zones, run `ibmcloud is regions` |
 | `ssh_key_name` | null | The name of your public SSH key to be used to login to the BIG-IP instance. Follow [Public SSH Key Doc](https://cloud.ibm.com/docs/vpc-on-classic-vsi?topic=vpc-on-classic-vsi-ssh-keys) for creating and managing ssh keys. |
 | `instance_profile` | cx2-2x4 | The profile of compute CPU and memory resources to be used when provisioning the BIG-IP instance. To list available profiles, run `ibmcloud is instance-profiles`. |
-| `tmos_image_name` | null | The name of the BIG-IP custom image you wish to deploy. To list available images, run `ibmcloud is images`.|
-| `instance_name` | f5-ve-01 | The hostname of the BIG-IP instance to be provisioned.  Note that the system will add ".local" to this name. |
+| `vnf_vpc_image_name` | bigip-14-1-2 | The name of the BIG-IP custom image that will temporarily be created in your account.|
+| `instance_name` | null | The hostname of the BIG-IP instance to be provisioned.  Note that the system will add ".local" to this name. |
 | `tmos_license_basekey` | null | The registration key to be used to license the BIG-IP. |
 | `tmos_admin_password` | null | The password to be used for the admin account on the BIG-IP GUI.  If left blank, this will generate a random, 32 byte password. |
 | `subnet_id` | null |The ID of the subnet where the BIG-IP interface will be deployed. Click on the subnet details in the VPC Subnet Listing to determine this value. | 
