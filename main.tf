@@ -26,7 +26,7 @@ data "template_file" "user_data" {
 // allow all traffic to data plane interfaces
 // TMM is the firewall
 resource "ibm_is_security_group" "f5_tmm_sg" {
-  name = "f5-tmm-sg"
+  name = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
   vpc  = "${data.ibm_is_subnet.f5_subnet.vpc}"
 }
 
