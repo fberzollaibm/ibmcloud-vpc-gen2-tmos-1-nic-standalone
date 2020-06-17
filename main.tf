@@ -28,6 +28,7 @@ data "template_file" "user_data" {
 resource "ibm_is_security_group" "f5_tmm_sg" {
   name = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
   vpc  = "${data.ibm_is_subnet.f5_subnet.vpc}"
+  resource_group   = "${data.ibm_resource_group.rg.id}"
 }
 
 // all TCP
@@ -86,6 +87,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
   # image   = data.ibm_is_image.tmos_image.id
   image   = "${data.ibm_is_image.f5_custom_image.id}"
   profile = "${data.ibm_is_instance_profile.instance_profile.id}"
+  resource_group   = "${data.ibm_resource_group.rg.id}"
   primary_network_interface {
     name            = "tmm-1nic"
     subnet          = "${data.ibm_is_subnet.f5_subnet.id}"
@@ -101,6 +103,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
 resource "ibm_is_floating_ip" "f5_floating_ip" {
   name   = "f5-${substr(random_uuid.test.result, 0, 8)}"
   target = "${ibm_is_instance.f5_ve_instance.primary_network_interface.0.id}"
+  resource_group   = "${data.ibm_resource_group.rg.id}"
 }
 
 output "resource_name" {
