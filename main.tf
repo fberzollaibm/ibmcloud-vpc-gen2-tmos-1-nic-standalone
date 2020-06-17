@@ -99,7 +99,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
 
 # create floating IPs
 resource "ibm_is_floating_ip" "f5_floating_ip" {
-  name   = "f5-floating-ip"
+  name   = "f5-${substr(random_uuid.test.result, 0, 8)}"
   target = "${ibm_is_instance.f5_ve_instance.primary_network_interface.0.id}"
 }
 
