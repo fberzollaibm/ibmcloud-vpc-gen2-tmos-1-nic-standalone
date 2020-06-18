@@ -29,7 +29,7 @@ data "external" "delete_custom_image" {
   program    = ["bash", "${path.module}/scripts/delete_custom_image.sh"]
 
   query = {
-    custom_image_id = "${data.ibm_is_image.f5_custom_image.id}"
+    custom_image_id = "${ibm_is_image.f5_custom_image.id}"
     region          = "${var.region}"
   }
 }
