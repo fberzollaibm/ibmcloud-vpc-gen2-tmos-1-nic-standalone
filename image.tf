@@ -23,11 +23,6 @@ resource "ibm_is_image" "f5_custom_image" {
   }
 }
 
-data "ibm_is_image" "f5_custom_image" {
-  name       = "${var.vnf_vpc_image_name}-${substr(random_uuid.test.result, 0, 8)}"
-  depends_on = ["ibm_is_image.f5_custom_image"]
-}
-
 # Delete custom image from the local user after VSI creation.
 data "external" "delete_custom_image" {
   depends_on = ["ibm_is_instance.f5_ve_instance"]
