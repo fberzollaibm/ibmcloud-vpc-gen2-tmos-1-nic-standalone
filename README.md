@@ -24,6 +24,10 @@ Learn more; https://www.ibm.com/cloud/support
 
 - Must have access to [Gen 2 VPC](https://cloud.ibm.com/vpc-ext/network/vpcs).
 - The given VPC must have at least 1 subnet to deploy the BIG-IP.  The lone subnet is for management and data traffic.  BIG-IP self-IPs will automatically be assigned to the subnet during initial boot.
+- A valid ssh key, to allow you to ssh into your instance after deployment.
+- Ensure you have the following permissions on the IBM Cloud Identiry and Access Management:
+    * Manager service access role for IBM Cloud Schematics
+    * Operator platform role for VPC infrastructure
 
 ## Costs
 
@@ -50,7 +54,7 @@ Before you can apply the template in IBM Cloud, complete the following steps.
 When you select the F5 Virtual Edition tile (https://cloud.ibm.com/catalog/content/F5-1arm-offering) from the IBM Cloud catalog, you can set up your deployment variables from the `Create` page. Once the template is applied, IBM Cloud Schematics provisions the resources based on the values that were specified for the deployment variables.
 
 ### Required values
-Fill in the following values, based on the steps that you completed before you began.
+Note that there are two sections, one for values with defaults and those without.
 
 | Key | Default | Definition |
 | --- | ------- | ---------- |
