@@ -24,10 +24,7 @@ Learn more; https://www.ibm.com/cloud/support
 
 - Must have access to [Gen 2 VPC](https://cloud.ibm.com/vpc-ext/network/vpcs).
 - The given VPC must have at least 1 subnet to deploy the BIG-IP.  The lone subnet is for management and data traffic.  BIG-IP self-IPs will automatically be assigned to the subnet during initial boot.
-- A valid ssh key, to allow you to ssh into your instance after deployment.
-- Ensure you have the following permissions on the IBM Cloud Identiry and Access Management:
-    * Manager service access role for IBM Cloud Schematics
-    * Operator platform role for VPC infrastructure
+
 
 ## Costs
 
