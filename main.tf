@@ -3,37 +3,37 @@
 # }
 
 data "ibm_is_subnet" "f5_subnet" {
-  identifier = "${var.subnet_id}"
+  identifier = var.subnet_id
 }
 
 data "ibm_is_ssh_key" "f5_ssh_pub_key" {
-  name = "${var.ssh_key_name}"
+  name = var.ssh_key_name
 }
 
 data "ibm_is_instance_profile" "instance_profile" {
-  name = "${var.instance_profile}"
+  name = var.instance_profile
 }
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/user_data.yaml")}"
+  template = file("${path.module}/user_data.yaml")
   vars = {
-    tmos_admin_password = "${var.tmos_admin_password}"
-    tmos_license_basekey = "${var.tmos_license_basekey}"
-    phone_home_url = "${var.phone_home_url}"
+    tmos_admin_password  = var.tmos_admin_password
+    tmos_license_basekey = var.tmos_license_basekey
+    phone_home_url       = var.phone_home_url
   }
 }
 
 // allow all traffic to data plane interfaces
 // TMM is the firewall
 resource "ibm_is_security_group" "f5_tmm_sg" {
-  name = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
-  vpc  = "${data.ibm_is_subnet.f5_subnet.vpc}"
-  resource_group   = "${data.ibm_resource_group.rg.id}"
+  name           = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
+  vpc            = data.ibm_is_subnet.f5_subnet.vpc
+  resource_group = data.ibm_resource_group.rg.id
 }
 
 // all TCP
 resource "ibm_is_security_group_rule" "f5_tmm_in_tcp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "inbound"
   tcp {
     port_min = 1
@@ -42,7 +42,7 @@ resource "ibm_is_security_group_rule" "f5_tmm_in_tcp" {
 }
 
 resource "ibm_is_security_group_rule" "f5_tmm_out_tcp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "outbound"
   tcp {
     port_min = 1
@@ -52,7 +52,7 @@ resource "ibm_is_security_group_rule" "f5_tmm_out_tcp" {
 
 // all UDP
 resource "ibm_is_security_group_rule" "f5_tmm_in_udp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "inbound"
   udp {
     port_min = 1
@@ -61,7 +61,7 @@ resource "ibm_is_security_group_rule" "f5_tmm_in_udp" {
 }
 
 resource "ibm_is_security_group_rule" "f5_tmm_out_udp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "outbound"
   udp {
     port_min = 1
@@ -71,51 +71,54 @@ resource "ibm_is_security_group_rule" "f5_tmm_out_udp" {
 
 // all ICMP
 resource "ibm_is_security_group_rule" "f5_tmm_in_icmp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "inbound"
-  icmp {}
+  icmp {
+  }
 }
 
 resource "ibm_is_security_group_rule" "f5_tmm_out_icmp" {
-  group     = "${ibm_is_security_group.f5_tmm_sg.id}"
+  group     = ibm_is_security_group.f5_tmm_sg.id
   direction = "outbound"
-  icmp {}
+  icmp {
+  }
 }
 
 resource "ibm_is_instance" "f5_ve_instance" {
-  name    = "${var.instance_name}"
+  name = var.instance_name
+
   # image   = data.ibm_is_image.tmos_image.id
-  image   = "${data.ibm_is_image.f5_custom_image.id}"
-  profile = "${data.ibm_is_instance_profile.instance_profile.id}"
-  resource_group   = "${data.ibm_resource_group.rg.id}"
+  image          = data.ibm_is_image.f5_custom_image.id
+  profile        = data.ibm_is_instance_profile.instance_profile.id
+  resource_group = data.ibm_resource_group.rg.id
   primary_network_interface {
     name            = "tmm-1nic"
-    subnet          = "${data.ibm_is_subnet.f5_subnet.id}"
-    security_groups = ["${ibm_is_security_group.f5_tmm_sg.id}"]
+    subnet          = data.ibm_is_subnet.f5_subnet.id
+    security_groups = [ibm_is_security_group.f5_tmm_sg.id]
   }
-  vpc  = "${data.ibm_is_subnet.f5_subnet.vpc}"
-  zone = "${data.ibm_is_subnet.f5_subnet.zone}"
-  keys = ["${data.ibm_is_ssh_key.f5_ssh_pub_key.id}"]
-  user_data = "${data.template_file.user_data.rendered}"
+  vpc       = data.ibm_is_subnet.f5_subnet.vpc
+  zone      = data.ibm_is_subnet.f5_subnet.zone
+  keys      = [data.ibm_is_ssh_key.f5_ssh_pub_key.id]
+  user_data = data.template_file.user_data.rendered
 }
 
 # create floating IPs
 resource "ibm_is_floating_ip" "f5_floating_ip" {
-  name   = "f5-${substr(random_uuid.test.result, 0, 8)}"
-  target = "${ibm_is_instance.f5_ve_instance.primary_network_interface.0.id}"
-  resource_group   = "${data.ibm_resource_group.rg.id}"
+  name           = "f5-${substr(random_uuid.test.result, 0, 8)}"
+  target         = ibm_is_instance.f5_ve_instance.primary_network_interface[0].id
+  resource_group = data.ibm_resource_group.rg.id
 }
 
 output "resource_name" {
-  value = "${ibm_is_instance.f5_ve_instance.name}"
+  value = ibm_is_instance.f5_ve_instance.name
 }
 
 output "resource_status" {
-  value = "${ibm_is_instance.f5_ve_instance.status}"
+  value = ibm_is_instance.f5_ve_instance.status
 }
 
 output "VPC" {
-  value = "${ibm_is_instance.f5_ve_instance.vpc}"
+  value = ibm_is_instance.f5_ve_instance.vpc
 }
 
 output "f5_shell_access" {
@@ -129,3 +132,4 @@ output "f5_admin_portal" {
 output "f5_as_url" {
   value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443/mgmt/shared/appsvcs/declare"
 }
+
