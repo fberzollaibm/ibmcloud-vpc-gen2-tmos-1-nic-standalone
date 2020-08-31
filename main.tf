@@ -28,7 +28,7 @@ data "template_file" "user_data" {
 resource "ibm_is_security_group" "f5_tmm_sg" {
   name           = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
   vpc            = data.ibm_is_subnet.f5_subnet.vpc
-  resource_group = data.ibm_resource_group.rg.id
+  resource_group = "rg-frankfurt"
 }
 
 // all TCP
