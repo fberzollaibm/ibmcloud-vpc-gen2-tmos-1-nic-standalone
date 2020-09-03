@@ -2,8 +2,17 @@
 #    name = var.tmos_image_name
 # }
 
+# Generating random ID
+resource "random_uuid" "test" {
+}
+
 data "ibm_is_subnet" "f5_subnet" {
   identifier = var.subnet_id
+}
+
+data "ibm_resource_group" "rg" {
+  depends_on = [data.ibm_is_subnet.f5_subnet]
+  name       = data.ibm_is_subnet.f5_subnet.resource_group_name
 }
 
 data "ibm_is_ssh_key" "f5_ssh_pub_key" {
@@ -21,6 +30,10 @@ data "template_file" "user_data" {
     tmos_license_basekey = var.tmos_license_basekey
     phone_home_url       = var.phone_home_url
   }
+}
+
+data "ibm_is_image" "f5_custom_image" {
+  name       = var.vnf_vpc_image_name
 }
 
 // allow all traffic to data plane interfaces
