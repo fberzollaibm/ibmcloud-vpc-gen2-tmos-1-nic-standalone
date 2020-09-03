@@ -36,10 +36,8 @@ data "ibm_is_image" "f5_custom_image" {
   name       = var.vnf_vpc_image_name
 }
 
-resource "ibm_is_security_group" "f5_tmm_sg" {
-  depends_on = [data.ibm_is_subnet.f5_subnet]
+date "ibm_is_security_group" "f5_tmm_sg" {
   name           = var.f5-tmm-sg-name
-  vpc            = data.ibm_is_subnet.f5_subnet.vpc
 }
 
 resource "ibm_is_instance" "f5_ve_instance" {
@@ -52,7 +50,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
   primary_network_interface {
     name            = "tmm-1nic"
     subnet          = data.ibm_is_subnet.f5_subnet.id
-    security_groups = [ibm_is_security_group.f5_tmm_sg.id]
+    security_groups = [data.ibm_is_security_group.f5_tmm_sg.id]
   }
   vpc       = data.ibm_is_subnet.f5_subnet.vpc
   zone      = data.ibm_is_subnet.f5_subnet.zone
