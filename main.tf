@@ -1,10 +1,3 @@
-# data "ibm_is_image" "tmos_image" {
-#    name = var.tmos_image_name
-# }
-
-# Generating random ID
-resource "random_uuid" "test" {
-}
 
 data "ibm_is_subnet" "f5_subnet" {
   identifier = var.subnet_id
@@ -58,13 +51,6 @@ resource "ibm_is_instance" "f5_ve_instance" {
   user_data = data.template_file.user_data.rendered
 }
 
-# create floating IPs
-resource "ibm_is_floating_ip" "f5_floating_ip" {
-  name           = "f5-${substr(random_uuid.test.result, 0, 8)}"
-  target         = ibm_is_instance.f5_ve_instance.primary_network_interface[0].id
-  resource_group = data.ibm_resource_group.rg.id
-}
-
 output "resource_name" {
   value = ibm_is_instance.f5_ve_instance.name
 }
@@ -75,17 +61,5 @@ output "resource_status" {
 
 output "VPC" {
   value = ibm_is_instance.f5_ve_instance.vpc
-}
-
-output "f5_shell_access" {
-  value = "ssh://root@${ibm_is_floating_ip.f5_floating_ip.address}"
-}
-
-output "f5_admin_portal" {
-  value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443"
-}
-
-output "f5_as_url" {
-  value = "https://${ibm_is_floating_ip.f5_floating_ip.address}:8443/mgmt/shared/appsvcs/declare"
 }
 
