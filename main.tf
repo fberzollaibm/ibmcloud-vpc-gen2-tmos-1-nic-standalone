@@ -36,7 +36,7 @@ data "ibm_is_image" "f5_custom_image" {
   name       = var.vnf_vpc_image_name
 }
 
-date "ibm_is_security_group" "f5_tmm_sg" {
+data "ibm_is_security_group" "f5_tmm_sg" {
   name           = var.f5-tmm-sg-name
 }
 
