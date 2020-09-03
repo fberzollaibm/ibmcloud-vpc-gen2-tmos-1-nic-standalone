@@ -36,65 +36,10 @@ data "ibm_is_image" "f5_custom_image" {
   name       = var.vnf_vpc_image_name
 }
 
-// allow all traffic to data plane interfaces
-// TMM is the firewall
 resource "ibm_is_security_group" "f5_tmm_sg" {
-  name           = "f5-tmm-sg-${substr(random_uuid.test.result, 0, 8)}"
+  depends_on = [data.ibm_is_subnet.f5_subnet]
+  name           = var.f5-tmm-sg-name
   vpc            = data.ibm_is_subnet.f5_subnet.vpc
-  resource_group = "202e6a9f93e2481ba304cc03d5cdcb07"
-}
-
-// all TCP
-resource "ibm_is_security_group_rule" "f5_tmm_in_tcp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "inbound"
-  tcp {
-    port_min = 1
-    port_max = 65535
-  }
-}
-
-resource "ibm_is_security_group_rule" "f5_tmm_out_tcp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "outbound"
-  tcp {
-    port_min = 1
-    port_max = 65535
-  }
-}
-
-// all UDP
-resource "ibm_is_security_group_rule" "f5_tmm_in_udp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "inbound"
-  udp {
-    port_min = 1
-    port_max = 65535
-  }
-}
-
-resource "ibm_is_security_group_rule" "f5_tmm_out_udp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "outbound"
-  udp {
-    port_min = 1
-    port_max = 65535
-  }
-}
-
-// all ICMP
-resource "ibm_is_security_group_rule" "f5_tmm_in_icmp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "inbound"
-  icmp {
-  }
-}
-
-resource "ibm_is_security_group_rule" "f5_tmm_out_icmp" {
-  group     = ibm_is_security_group.f5_tmm_sg.id
-  direction = "outbound"
-  icmp {
-  }
 }
 
 resource "ibm_is_instance" "f5_ve_instance" {
