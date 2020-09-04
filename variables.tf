@@ -1,12 +1,22 @@
+variable "zone" {
+  default     = "eu-de-1"
+  description = ""
+}
+
+variable "vpc_name" {
+  default     = "vpc-frankfurt"
+  description = ""
+}
+
 variable "instance_name" {
   default     = "f5-ve-01"
   description = ""
 }
 
-#variable "tmos_image_name" {
-#  default     = "my-bigip-image"
-#  description = "The image to be used when provisioning the F5 BIG-IP instance. To list available images, run `ibmcloud is images`."
-#}
+variable "resource_group_name" {
+  default     = "rg-frankfurt"
+  description = ""
+}
 
 variable "instance_profile" {
   default     = "cx2-2x4"
@@ -28,26 +38,6 @@ variable "tmos_admin_password" {
   description = "'admin' account password for the F5 BIG-IP instance."
 }
 
-variable "subnet_id" {
-  type        = list(string)
-  default     = []
-  description = "VPC Gen2 subnet ID for the TMOS instance.  To list available subnets, run `ibmcloud is subnets`."
-}
-
-variable "subnets" {
-  type = list(object({
-    subnet_id = string
-    vip_route = string
-  }))
-  default = [
-    {
-      subnet_id = ""
-      vip_route = ""
-    }
-  ]
-  description = "VPC Gen2 subnet ID for the TMOS instance and the associated route to the VIP."
-}
-
 variable "phone_home_url" {
   default = ""
 }
@@ -57,12 +47,26 @@ variable "vnf_vpc_image_name" {
   description = "The name of the F5-BIGIP custom image to be used for this instance in your IBM Cloud account."
 }
 
-variable "f5-tmm-sg-name" {
-  default     = ""
-  description = "The name of the Security group to assign to the VM."
-}
-
 variable "TF_VERSION" {
   default     = "0.12"
   description = "terraform engine version to be used in schematics"
 }
+
+variable "subnets" {
+  type = list(object({
+    subnet_id           = string
+    nic_name            = string
+    security_group_name = string
+    vip_route           = string
+  }))
+  default = [
+    {
+      subnet_id           = ""
+      nic_name            = ""
+      security_group_name = ""
+      vip_route           = ""
+    }
+  ]
+  description = "VPC Gen2 subnet ID for the TMOS instance and the associated route to the VIP."
+}
+
