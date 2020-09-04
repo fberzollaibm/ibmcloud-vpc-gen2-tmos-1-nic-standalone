@@ -29,8 +29,23 @@ variable "tmos_admin_password" {
 }
 
 variable "subnet_id" {
-  default     = ""
+  type        = list(string)
+  default     = []
   description = "VPC Gen2 subnet ID for the TMOS instance.  To list available subnets, run `ibmcloud is subnets`."
+}
+
+variable "subnets" {
+  type = list(object({
+    subnet_id = string
+    vip_route = string
+  }))
+  default = [
+    {
+      subnet_id = ""
+      vip_route = ""
+    }
+  ]
+  description = "VPC Gen2 subnet ID for the TMOS instance and the associated route to the VIP."
 }
 
 variable "phone_home_url" {
@@ -48,6 +63,6 @@ variable "f5-tmm-sg-name" {
 }
 
 variable "TF_VERSION" {
-  default = "0.12"
+  default     = "0.12"
   description = "terraform engine version to be used in schematics"
 }
