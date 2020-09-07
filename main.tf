@@ -75,6 +75,5 @@ output "VPC" {
 }
 
 output "security_groups" {
-  for_each = data.ibm_is_security_group.f5_tmm_sg
-  value = each.value
+  value = data.ibm_is_security_group.f5_tmm_sg[*]
 }
