@@ -28,7 +28,9 @@ data "ibm_is_image" "f5_custom_image" {
 }
 
 data "ibm_is_security_group" "f5_tmm_sg" {
-  for_each = var.subnets
+  for_each = {
+    for subnet in local.subnets : "${subnet.subnet_id}" => subnet
+  }
   name     = each.value.security_group_name
 }
 
@@ -49,7 +51,9 @@ resource "ibm_is_instance" "f5_ve_instance" {
   profile        = data.ibm_is_instance_profile.instance_profile.id
   resource_group = data.ibm_resource_group.rg.id
   dynamic "primary_network_interface" {
-    for_each = local.subnets
+    for_each = {
+      for subnet in local.subnets : "${subnet.subnet_id}" => subnet
+    }
     content {
       name            = each.value.nic_name
       subnet          = each.value.subnet_id
