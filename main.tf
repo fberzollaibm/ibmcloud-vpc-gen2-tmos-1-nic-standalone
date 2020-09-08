@@ -84,9 +84,9 @@ resource "ibm_is_instance" "f5_ve_instance" {
 resource "ibm_is_vpc_route" "vip_route" {
   depends_on = [ibm_is_instance.f5_ve_instance]
   for_each = {
-    for i, subnet in local.subnets : "${subnet.subnet_id}" => subnet
+    for i, subnet in local.subnets : "${subnet.unique-subnet_id}" => subnet
   }
-  name        = "VIP Route - ${each.value.subnet_id}"
+  name        = "VIP Route - ${each.value.unique-subnet_id}"
   vpc         = data.ibm_is_vpc.f5_vpc.id
   zone        = var.zone
   destination = each.value.vip_route
