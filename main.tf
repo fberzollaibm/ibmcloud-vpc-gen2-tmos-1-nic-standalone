@@ -2,10 +2,12 @@
 locals {
   subnets = [
     for i, subnet in var.subnets : {
+      index               = i
       subnet_id           = subnet.subnet_id
       nic_name            = subnet.nic_name
       security_group_name = subnet.security_group_name
       unique-security_group_name = "${subnet.security_group_name}-${i}}"
+      unique-subnet_id    = "${subnet.subnet_id}-${i}}"
       vip_route           = subnet.vip_route
     }
   ]
@@ -63,7 +65,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
 
   dynamic "network_interfaces" {
     for_each = {
-      for i, subnet in local.subnets : "${subnet.subnet_id}" => subnet if i>0
+      for i, subnet in local.subnets : subnet.unique-subnet_id => subnet if i>0
     }
     content {
       name            = network_interfaces.value.nic_name
@@ -76,6 +78,19 @@ resource "ibm_is_instance" "f5_ve_instance" {
   zone      = var.zone
   keys      = [data.ibm_is_ssh_key.f5_ssh_pub_key.id]
   user_data = data.template_file.user_data.rendered
+}
+
+
+resource "ibm_is_vpc_route" "vip_route" {
+  depends_on = [ibm_is_instance.f5_ve_instance]
+  for_each = {
+    for i, subnet in local.subnets : "${subnet.subnet_id}" => subnet
+  }
+  name        = "VIP Route - ${subnet.subnet_id}"
+  vpc         = data.ibm_is_vpc.f5_vpc.id
+  zone        = var.zone
+  destination = each.value.vip_route
+  next_hop    = each.value.index == 0 ? ibm_is_instance.data.f5_ve_instance.primary_network_interface.primary_ipv4_address : ibm_is_instance.data.f5_ve_instance.network_interfaces[each.value.unique-subnet_id].primary_ipv4_address
 }
 
 output "resource_name" {
