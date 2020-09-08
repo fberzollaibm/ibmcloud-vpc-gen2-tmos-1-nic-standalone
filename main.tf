@@ -50,14 +50,14 @@ resource "ibm_is_instance" "f5_ve_instance" {
   image          = data.ibm_is_image.f5_custom_image.id
   profile        = data.ibm_is_instance_profile.instance_profile.id
   resource_group = data.ibm_resource_group.rg.id
-  dynamic "primary_network_interface" {
+  dynamic "network_interface" {
     for_each = {
       for subnet in local.subnets : "${subnet.subnet_id}" => subnet
     }
     content {
-      name            = each.value.nic_name
-      subnet          = each.value.subnet_id
-      security_groups = [each.value.security_group_id]
+      name            = network_interface.value.nic_name
+      subnet          = network_interface.value.subnet_id
+      security_groups = [network_interface.value.security_group_id]
     }
   }
   vpc       = var.vpc_name
