@@ -6,7 +6,6 @@ locals {
       nic_name            = subnet.nic_name
       security_group_name = subnet.security_group_name
       vip_route           = subnet.vip_route
-      security_group_id   = ""
     }
   ]
 }
@@ -54,7 +53,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
   primary_network_interface {
       name            = local.subnets[0].nic_name
       subnet          = local.subnets[0].subnet_id
-      security_groups = [local.subnets[0].security_group_id]
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[0].security_group_id]
   }
 
   dynamic "network_interfaces" {
@@ -64,7 +63,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
     content {
       name            = primary_network_interface.value.nic_name
       subnet          = primary_network_interface.value.subnet_id
-      security_groups = [primary_network_interface.value.security_group_id]
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[count.index +1].id]
     }
   }
 
