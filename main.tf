@@ -7,7 +7,7 @@ locals {
       nic_name            = subnet.nic_name
       security_group_name = subnet.security_group_name
       unique-security_group_name = "${subnet.security_group_name}-${i}}"
-      unique-subnet_id    = "${subnet.subnet_id}-${i}}"
+      unique-subnet_id    = "${subnet.subnet_id}-${i}"
       vip_route           = subnet.vip_route
     }
   ]
