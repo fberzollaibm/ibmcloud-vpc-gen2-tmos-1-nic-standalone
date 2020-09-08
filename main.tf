@@ -50,16 +50,24 @@ resource "ibm_is_instance" "f5_ve_instance" {
   image          = data.ibm_is_image.f5_custom_image.id
   profile        = data.ibm_is_instance_profile.instance_profile.id
   resource_group = data.ibm_resource_group.rg.id
-  dynamic "network_interface" {
+
+  primary_network_interface {
+      name            = local.subnets[0].nic_name
+      subnet          = local.subnets[0].subnet_id
+      security_groups = [local.subnets[0].security_group_id]
+  }
+
+  dynamic "network_interfaces" {
     for_each = {
-      for subnet in local.subnets : "${subnet.subnet_id}" => subnet
+      for i, subnet in local.subnets : "${subnet.subnet_id}" => subnet if i>0
     }
     content {
-      name            = network_interface.value.nic_name
-      subnet          = network_interface.value.subnet_id
-      security_groups = [network_interface.value.security_group_id]
+      name            = primary_network_interface.value.nic_name
+      subnet          = primary_network_interface.value.subnet_id
+      security_groups = [primary_network_interface.value.security_group_id]
     }
   }
+
   vpc       = var.vpc_name
   zone      = var.zone
   keys      = [data.ibm_is_ssh_key.f5_ssh_pub_key.id]
