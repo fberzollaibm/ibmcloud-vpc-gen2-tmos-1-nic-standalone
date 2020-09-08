@@ -10,6 +10,10 @@ locals {
   ]
 }
 
+data "ibm_is_vpc" "f5_vpc" {
+  name = var.vpc_name
+}
+
 data "ibm_resource_group" "rg" {
   name = var.resource_group_name
 }
@@ -67,7 +71,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
     }
   }
 
-  vpc       = var.vpc_name
+  vpc       = data.ibm_is_vpc.f5_vpc.id
   zone      = var.zone
   keys      = [data.ibm_is_ssh_key.f5_ssh_pub_key.id]
   user_data = data.template_file.user_data.rendered
