@@ -1,10 +1,11 @@
 
 locals {
   subnets = [
-    for subnet in var.subnets : {
+    for i, subnet in var.subnets : {
       subnet_id           = subnet.subnet_id
       nic_name            = subnet.nic_name
       security_group_name = subnet.security_group_name
+      unique-security_group_name = "${subnet.security_group_name}-${i}}"
       vip_route           = subnet.vip_route
     }
   ]
@@ -32,7 +33,7 @@ data "ibm_is_image" "f5_custom_image" {
 
 data "ibm_is_security_group" "f5_tmm_sg" {
   for_each = {
-    for i, subnet in local.subnets : concat(subnet.security_group_name, i) => subnet
+    for i, subnet in local.subnets : subnet.unique-security_group_name => subnet
   }
   name     = each.value.security_group_name
 }
@@ -57,7 +58,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
   primary_network_interface {
       name            = local.subnets[0].nic_name
       subnet          = local.subnets[0].subnet_id
-      security_groups = [data.ibm_is_security_group.f5_tmm_sg[local.subnets[0].security_group_name].id]
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[local.subnets[0].unique-security_group_name].id]
   }
 
   dynamic "network_interfaces" {
@@ -65,9 +66,9 @@ resource "ibm_is_instance" "f5_ve_instance" {
       for i, subnet in local.subnets : "${subnet.subnet_id}" => subnet if i>0
     }
     content {
-      name            = primary_network_interface.value.nic_name
-      subnet          = primary_network_interface.value.subnet_id
-      security_groups = [data.ibm_is_security_group.f5_tmm_sg[concat(primary_network_interface.value.security_group_name, count.index)].id]
+      name            = network_interfaces.value.nic_name
+      subnet          = network_interfaces.value.subnet_id
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[network_interfaces.value.unique-security_group_name].id]
     }
   }
 
