@@ -32,7 +32,7 @@ data "ibm_is_image" "f5_custom_image" {
 
 data "ibm_is_security_group" "f5_tmm_sg" {
   for_each = {
-    for subnet in local.subnets : "${subnet.security_group_name}" => subnet
+    for i, subnet in local.subnets : concat(subnet.security_group_name, i) => subnet
   }
   name     = each.value.security_group_name
 }
@@ -67,7 +67,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
     content {
       name            = primary_network_interface.value.nic_name
       subnet          = primary_network_interface.value.subnet_id
-      security_groups = [data.ibm_is_security_group.f5_tmm_sg[primary_network_interface.value.security_group_name].id]
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[concat(primary_network_interface.value.security_group_name, count.index)].id]
     }
   }
 
