@@ -86,7 +86,7 @@ resource "ibm_is_vpc_route" "vip_route" {
   for_each = {
     for i, subnet in local.subnets : "${subnet.unique-subnet_id}" => subnet
   }
-  name        = "VIP Route - ${each.value.unique-subnet_id}"
+  name        = "vip-route-${each.value.unique-subnet_id}"
   vpc         = data.ibm_is_vpc.f5_vpc.id
   zone        = var.zone
   destination = each.value.vip_route
