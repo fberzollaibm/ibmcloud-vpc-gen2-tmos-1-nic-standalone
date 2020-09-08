@@ -53,7 +53,7 @@ resource "ibm_is_instance" "f5_ve_instance" {
   primary_network_interface {
       name            = local.subnets[0].nic_name
       subnet          = local.subnets[0].subnet_id
-      security_groups = [data.ibm_is_security_group.f5_tmm_sg[0].security_group_id]
+      security_groups = [data.ibm_is_security_group.f5_tmm_sg[0].id]
   }
 
   dynamic "network_interfaces" {
