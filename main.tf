@@ -90,7 +90,7 @@ resource "ibm_is_vpc_route" "vip_route" {
   vpc         = data.ibm_is_vpc.f5_vpc.id
   zone        = var.zone
   destination = each.value.vip_route
-  next_hop    = each.value.idx == 0 ? ibm_is_instance.f5_ve_instance.primary_network_interface[0].primary_ipv4_address : ibm_is_instance.f5_ve_instance.network_interfaces[each.value.unique-subnet_id].primary_ipv4_address
+  next_hop    = each.value.idx == 0 ? ibm_is_instance.f5_ve_instance.primary_network_interface[0].primary_ipv4_address : ibm_is_instance.f5_ve_instance.network_interfaces[each.value.idx-1].primary_ipv4_address
 }
 
 output "locals_sunets" {
