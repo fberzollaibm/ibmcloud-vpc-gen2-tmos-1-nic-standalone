@@ -2,7 +2,7 @@
 locals {
   subnets = [
     for i, subnet in var.subnets : {
-      index               = i
+      idx                 = i
       subnet_id           = subnet.subnet_id
       nic_name            = subnet.nic_name
       security_group_name = subnet.security_group_name
@@ -90,7 +90,11 @@ resource "ibm_is_vpc_route" "vip_route" {
   vpc         = data.ibm_is_vpc.f5_vpc.id
   zone        = var.zone
   destination = each.value.vip_route
-  next_hop    = each.value.index == 0 ? ibm_is_instance.data.f5_ve_instance.primary_network_interface.primary_ipv4_address : ibm_is_instance.data.f5_ve_instance.network_interfaces[each.value.unique-subnet_id].primary_ipv4_address
+  next_hop    = each.value.idx == 0 ? ibm_is_instance.f5_ve_instance.primary_network_interface.primary_ipv4_address : ibm_is_instance.f5_ve_instance.network_interfaces[each.value.unique-subnet_id].primary_ipv4_address
+}
+
+output "locals_sunets" {
+  value = local.subnets
 }
 
 output "resource_name" {
